@@ -5,7 +5,7 @@
  */
 package parqueadero;
 
-import java.util.ArrayList;
+import DataStructures.*;
 
 /**
  *
@@ -13,10 +13,39 @@ import java.util.ArrayList;
  */
 public class Parqueadero {
     // Atributos:
+    /**
+     * Numero de pisos del edificio.
+     */
     private int numPisos;
-    private int espaciosPiso;
-    private ArrayList<Factura> facturas;
-    private Espacio[] espacios;
+    /**
+     * Numero de lugares en cada seccion del parqueadero.
+     */
+    private int espaciosSeccion;
+    /**
+     * Facturas realizadas el dia actual.
+     */
+    private ArregloDinamico<Factura> facturas;
+    /**
+     * Reservas hechas para el dia actual.
+     */
+    private ArregloDinamico<Reserva> reservas;
+    /**
+     * Cola de solicitudes de ingreso en caso de que el parqueadero este lleno.
+     */
+    private Cola<Ingreso> solicitudesIngreso;
+    /**
+     * Cola de solicitudes de reserva para el dia siguiente en el parqueadero.
+     */
+    private Cola<Reserva> solicitudesReserva;
+    /**
+     * Lista de servicios actuales en el parqueadero.
+     */
+    private LinkedList<Servicio> servicios;
+    /**
+     * Referencias a las secciones de la lista de servicios.
+     */
+    private Node<Servicio> secciones;
+  
     /**
      * @param args the command line arguments
      */
