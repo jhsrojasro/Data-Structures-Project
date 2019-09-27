@@ -5,6 +5,8 @@
  */
 package parqueadero;
 
+import java.util.Calendar;
+
 /**
  *
  * @author Estudiante
@@ -12,10 +14,30 @@ package parqueadero;
 public class Reserva {
     private Carro carro;
     private Cliente cliente;
+    private Calendar fecha;
+    private double recargo;
 
-    public Reserva(Carro carro, Cliente cliente) {
+    public Reserva(Carro carro, Cliente cliente, Calendar fecha, double recargo) {
         this.carro = carro;
         this.cliente = cliente;
+        this.fecha = fecha;
+        this.recargo = recargo;
+    }
+
+    public double getRecargo() {
+        return recargo;
+    }
+
+    public void setRecargo(double recargo) {
+        this.recargo = recargo;
+    }
+    
+    public Calendar getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Calendar fecha) {
+        this.fecha = fecha;
     }
 
     public Carro getCarro() {
