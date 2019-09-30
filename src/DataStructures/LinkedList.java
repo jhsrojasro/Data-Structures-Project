@@ -26,7 +26,15 @@ public class LinkedList<T>{
     }
     
     public Node getHead(){return head;}
-    public Node getTail(){return head;}
+    public Node getTail(){return tail;}
+
+    public void setHead(Node head) {
+        this.head = head;
+    }
+
+    public void setTail(Node tail) {
+        this.tail = tail;
+    }
     
     public boolean isEmpty(){return head == null;}
     
@@ -45,12 +53,18 @@ public class LinkedList<T>{
     }
     
     public void pushBack(T key){
-        Node aux = head;
-        while(aux.next() != null){
-            aux = aux.next();
+        if(isEmpty()){
+            Node<T> node = new Node<T>(key);
+            head = node;
+            tail = node;
+        }else{
+            Node aux = head;
+            while(aux.next() != null){
+                aux = aux.next();
+            }
+            aux.setNext(new Node(key));
+            tail = aux.next();
         }
-        aux.setNext(new Node(key));
-        tail = aux.next();
     }
     
     public void printList(){
@@ -67,15 +81,21 @@ public class LinkedList<T>{
     }
     
     public T topBack(){
+        if(tail == null) return null;
         return (T) tail.getData();
     }
     
     public void popBack(){
-        Node aux = head;
-        while(aux.next().next() != null){
-            aux = aux.next();
+        if(!isEmpty()){
+            if(head.next() == null){ head = null; tail = null;
+            }else{
+                Node aux = head;
+                while(aux.next().next() != null){
+                    aux = aux.next();
+                }
+                aux.setNext(null);
+            }
         }
-        aux.setNext(null);
     }
     
     public boolean findData(T data){
@@ -95,8 +115,12 @@ public class LinkedList<T>{
         }
     }
     
+    public void removeNode(Node<T> node){
+        
+    }    
     public static void main(String[] args){
-        LinkedList<Integer> lista = new LinkedList<Integer>(new Node(1));
+        LinkedList<Integer> lista = new LinkedList<Integer>();
+        lista.pushBack(1);
         lista.pushBack(2);
         lista.pushBack(3);
         lista.pushBack(4);

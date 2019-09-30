@@ -12,12 +12,11 @@ package parqueadero;
 public class Carro {
     private String placa;
     private String marca;
-    private String color;
+    
 
-    public Carro(String placa, String marca, String color) {
+    public Carro(String placa, String marca) {
         this.placa = placa;
         this.marca = marca;
-        this.color = color;
     }
 
     public String getPlaca() {
@@ -36,12 +35,13 @@ public class Carro {
         this.marca = marca;
     }
 
-    public String getColor() {
-        return color;
+    @Override
+    public String toString() {
+        return "Carro{" + "placa=" + placa + ", marca=" + marca + '}';
     }
 
-    public void setColor(String color) {
-        this.color = color;
+    public boolean equals(Carro carro) {
+        return carro.marca.equals(this.marca) && carro.placa.equals(this.placa);  //To change body of generated methods, choose Tools | Templates.
     }
     
     

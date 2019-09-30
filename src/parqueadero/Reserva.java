@@ -15,21 +15,12 @@ public class Reserva {
     private Carro carro;
     private Cliente cliente;
     private Calendar fecha;
-    private double recargo;
 
-    public Reserva(Carro carro, Cliente cliente, Calendar fecha, double recargo) {
+    public Reserva(Carro carro, Cliente cliente, Calendar fecha) {
         this.carro = carro;
         this.cliente = cliente;
         this.fecha = fecha;
-        this.recargo = recargo;
-    }
-
-    public double getRecargo() {
-        return recargo;
-    }
-
-    public void setRecargo(double recargo) {
-        this.recargo = recargo;
+        
     }
     
     public Calendar getFecha() {

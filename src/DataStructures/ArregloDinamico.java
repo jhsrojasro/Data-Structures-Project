@@ -47,14 +47,24 @@ public class ArregloDinamico<T> {
         
     }
     
+    public void removeLast(){
+        remove(size-1);
+    }
+    
     public T get(int index){
         return array[index];
     }
     
+    public T getLast(){
+        return array[size-1];
+    }
     
     public boolean isFull(){
         return size == capacidad;
     }
     
-    
+    public boolean isEmpty(){
+        return size == 0;
+    }
+            
 }

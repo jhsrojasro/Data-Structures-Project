@@ -33,6 +33,10 @@ public class Cliente {
     public void setId(String id) {
         this.id = id;
     }
-    
+
+    @Override
+    public String toString() {
+        return "Cliente{" + "nombre=" + nombre + ", id=" + id + '}';
+    }
     
 }

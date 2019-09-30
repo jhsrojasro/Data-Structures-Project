@@ -1,0 +1,10 @@
+6,0,UOB-327,Land Rover,Lilia Gulisa,6365555086
+6,1,EOP-323,Fiat,Lilia Gulisa,9870531701
+6,2,WJE-436,Audi,Zaurbek Festus,1100404455
+6,3,IME-991,Iveco,Yehoshua Vyacheslav,6212009839
+6,4,FIJ-403,Ferrari,Prometheus Nani,5952682425
+6,5,MKB-245,Mercedes-Benz,Elektra Gedaliah,0926925728
+6,6,SOH-802,Lexus,Cyril Antheia,9666412283
+6,7,DRG-069,BMW,Marina Kean,0144863253
+6,8,KGR-780,Cadillac,Lilia Gulisa,2500254985
+6,9,BSA-760,Maserati,Sridevi Mina,8972680677

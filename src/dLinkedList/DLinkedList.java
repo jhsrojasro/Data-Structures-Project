@@ -11,36 +11,7 @@ import DataStructures.LinkedList;
  *
  * @author Sebastian Rojas
  */
-class Node<T>{
-    private T data;
-    private Node next;
-    private Node prev;
-    
-    public Node(){
-        this.data = null;
-        this.next = null;
-        this.prev = null;
-    }
-    
-    public Node(T data){
-        this.data = data;
-        this.next = null;
-        this.prev = null;
-    }
-    
-    public Node(T data, Node next, Node prev){
-        this.data = data;
-        this.next = next;
-        this.prev = prev;
-    }
-    
-    public T getData(){return data;}
-    public void setData(T data){this.data = data;}
-    public Node next(){return next;}
-    public void setNext(Node n){this.next = n;}
-    public Node prev(){return prev;}
-    public void setPrev(Node n){this.prev = n;}
-}
+
 
 public class DLinkedList<T>{
     private Node head;
@@ -55,9 +26,17 @@ public class DLinkedList<T>{
         this.head = n;
         this.tail = n;
     }
+
+    public void setHead(Node head) {
+        this.head = head;
+    }
+
+    public void setTail(Node tail) {
+        this.tail = tail;
+    }
     
-    public Node getHead(){return head;}
-    public Node getTail(){return head;}
+    public Node<T> getHead(){return head;}
+    public Node<T> getTail(){return tail;}
     
     public boolean isEmpty(){return head == null;}
     
@@ -76,9 +55,15 @@ public class DLinkedList<T>{
     }
     
     public void pushBack(T key){
-        Node<T> node = new Node<T>(key, null , tail);
-        tail.setNext(node);
-        tail = node;
+        if(isEmpty()){
+            Node<T> node = new Node<T>(key,null,null);
+            head = node;
+            tail = node;
+        }else{
+            Node<T> node = new Node<T>(key, null , tail);
+            tail.setNext(node);
+            tail = node;
+        }
     }
     
     public void printList(){

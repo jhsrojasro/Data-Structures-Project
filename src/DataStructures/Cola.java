@@ -20,6 +20,10 @@ public class Cola<T> {
         list.pushBack(value);
     }
     
+    public T topFront(){
+        return list.topFront();
+    }
+    
     public T dequeue(){
         if(!list.isEmpty()){
             T r = list.topFront();
@@ -28,6 +32,10 @@ public class Cola<T> {
         }else{
             throw new RuntimeException("La cola está vacia");
         }
+    }
+    
+    public boolean isEmpty(){
+        return list.isEmpty();
     }
     
     
