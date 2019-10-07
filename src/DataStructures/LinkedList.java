@@ -1,17 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package DataStructures;
 
 
-
-/**
- *
- * @author Sebastian Rojas
- */
-public class LinkedList<T>{
+public class LinkedList{
     private Node head;
     private Node tail;
     
@@ -26,24 +15,16 @@ public class LinkedList<T>{
     }
     
     public Node getHead(){return head;}
-    public Node getTail(){return tail;}
-
-    public void setHead(Node head) {
-        this.head = head;
-    }
-
-    public void setTail(Node tail) {
-        this.tail = tail;
-    }
+    public Node getTail(){return head;}
     
     public boolean isEmpty(){return head == null;}
     
-    public void pushFront(T key){
+    public void pushFront(int key){
         head = new Node(key, head);
     }
     
-    public T topFront(){
-        if(!isEmpty()) return (T) head.getData();
+    public int topFront(){
+        if(!isEmpty()) return head.getData();
         throw new RuntimeException("La lista está vacia");
     }
     
@@ -52,19 +33,13 @@ public class LinkedList<T>{
         else throw new RuntimeException("La lista está vacia");
     }
     
-    public void pushBack(T key){
-        if(isEmpty()){
-            Node<T> node = new Node<T>(key);
-            head = node;
-            tail = node;
-        }else{
-            Node aux = head;
-            while(aux.next() != null){
-                aux = aux.next();
-            }
-            aux.setNext(new Node(key));
-            tail = aux.next();
+    public void pushBack(int key){
+        Node aux = head;
+        while(aux.next() != null){
+            aux = aux.next();
         }
+        aux.setNext(new Node(key));
+        tail = aux.next();
     }
     
     public void printList(){
@@ -80,25 +55,19 @@ public class LinkedList<T>{
         if(node.next()!= null) printListRecursive(node.next());
     }
     
-    public T topBack(){
-        if(tail == null) return null;
-        return (T) tail.getData();
+    public int topBack(){
+        return tail.getData();
     }
     
     public void popBack(){
-        if(!isEmpty()){
-            if(head.next() == null){ head = null; tail = null;
-            }else{
-                Node aux = head;
-                while(aux.next().next() != null){
-                    aux = aux.next();
-                }
-                aux.setNext(null);
-            }
+        Node aux = head;
+        while(aux.next().next() != null){
+            aux = aux.next();
         }
+        aux.setNext(null);
     }
     
-    public boolean findData(T data){
+    public boolean findData(int data){
         boolean find = false;
         Node aux = head;
         while(aux.next() != null){
@@ -108,19 +77,15 @@ public class LinkedList<T>{
         return false;
     }
     
-    public void erase(T data){
+    public void erase(int data){
         Node aux = head;
         while(aux.next().getData() != data && aux.next() != null){
             aux.setNext(aux.next().next()); 
         }
     }
     
-    public void removeNode(Node<T> node){
-        
-    }    
     public static void main(String[] args){
-        LinkedList<Integer> lista = new LinkedList<Integer>();
-        lista.pushBack(1);
+        LinkedList lista = new LinkedList(new Node(1));
         lista.pushBack(2);
         lista.pushBack(3);
         lista.pushBack(4);

@@ -5,7 +5,7 @@
  */
 package dLinkedList;
 
-import DataStructures.LinkedList;
+import DataStructures.*;
 
 /**
  *
@@ -14,34 +14,34 @@ import DataStructures.LinkedList;
 
 
 public class DLinkedList<T>{
-    private Node head;
-    private Node tail;
+    private DNode head;
+    private DNode tail;
     
     public DLinkedList(){
         this.head = null;
         this.tail = null;
     }
     
-    public DLinkedList(Node n){
+    public DLinkedList(DNode n){
         this.head = n;
         this.tail = n;
     }
 
-    public void setHead(Node head) {
+    public void setHead(DNode head) {
         this.head = head;
     }
 
-    public void setTail(Node tail) {
+    public void setTail(DNode tail) {
         this.tail = tail;
     }
     
-    public Node<T> getHead(){return head;}
-    public Node<T> getTail(){return tail;}
+    public DNode<T> getHead(){return head;}
+    public DNode<T> getTail(){return tail;}
     
     public boolean isEmpty(){return head == null;}
     
     public void pushFront(T key){
-        head = new Node(key, head, null);
+        head = new DNode(key, head, null);
     }
     
     public T topFront(){
@@ -56,25 +56,25 @@ public class DLinkedList<T>{
     
     public void pushBack(T key){
         if(isEmpty()){
-            Node<T> node = new Node<T>(key,null,null);
+            DNode<T> node = new DNode<T>(key,null,null);
             head = node;
             tail = node;
         }else{
-            Node<T> node = new Node<T>(key, null , tail);
+            DNode<T> node = new DNode<T>(key, null , tail);
             tail.setNext(node);
             tail = node;
         }
     }
     
     public void printList(){
-        Node aux = head;
+        DNode aux = head;
         while(aux != null){
             System.out.println(aux.getData()+" ");
             aux = aux.next();
         }
     }
     
-    public void printListRecursive(Node node){
+    public void printListRecursive(DNode node){
         System.out.println(node.getData());
         if(node.next()!= null) printListRecursive(node.next());
     }
@@ -90,7 +90,7 @@ public class DLinkedList<T>{
     
     public boolean findData(T data){
         boolean find = false;
-        Node aux = head;
+        DNode aux = head;
         while(aux.next() != null){
             if(aux.getData() == data) return true;
             aux = aux.next();
@@ -99,14 +99,16 @@ public class DLinkedList<T>{
     }
     
     public void erase(T data){
-        Node aux = head;
+        DNode aux = head;
         while(aux.next().getData() != data && aux.next() != null){
             aux.setNext(aux.next().next()); 
         }
     }
     
+    
+    
     public static void main(String[] args){
-        DLinkedList<Integer> lista = new DLinkedList<Integer>(new Node(1));
+        DLinkedList<Integer> lista = new DLinkedList<Integer>(new DNode(1));
         lista.pushBack(2);
         lista.pushBack(3);
         lista.pushBack(4);

@@ -7,9 +7,11 @@ package main;
 
 import parqueadero.*;
 import DataStructures.*;
+import dLinkedList.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Calendar;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -23,22 +25,55 @@ public class Main {
     private Parqueadero parqueadero;
     private String[] nombres;
     private String[] marcas;
+    public final int prueba = 1000000;
+    public final int numEspacios = 25;
+    public final int numPisos = 1000;
     
     
     public static void main(String[] args){
         Main main = new Main();
-        //main.generarSolicitudesIngreso(1000000);
-        main.generarSolicitudesFacturas(100, 25);
-        main.probarIngreso(10000);
-        //main.probarFacturacion(100, 25);
+        //main.generarSolicitudesIngreso(main.prueba);
+        //main.generarSolicitudesFacturas(main.prueba, main.numEspacios);
+        //main.probarIngreso(main.prueba);
+        //main.parqueadero.getServicios().printList();
+        //main.probarFacturacion(main.prueba, main.numEspacios);
+        //main.generarReservas(100);
+        main.probarReservar();
         
     }
     public Main(){
         this.cargarMarcas();
         this.cargarNombres();
-        this.parqueadero = new Parqueadero(10000,25);
+        this.parqueadero = new Parqueadero(numPisos,numEspacios);
         //this.generarReservas(10);
         
+    }
+    
+    public void probarReservar(){
+        try {
+            long start = System.currentTimeMillis();
+            Scanner scan = new Scanner(new File("src\\data\\reservas.txt"));
+            ArregloDinamico<Reserva> array = new ArregloDinamico<Reserva>();
+            scan.useDelimiter(",|\\n");
+            int n=0;
+            while(scan.hasNext()){
+                Calendar aux = Calendar.getInstance();
+                aux.set(Calendar.HOUR, scan.nextInt());
+                aux.set(Calendar.SECOND, scan.nextInt());
+                array.add(new Reserva(new Carro(scan.next(), scan.next())
+                        , new Cliente(scan.next(), scan.next()), aux));
+                n++;
+            }
+            
+            for (int i = 0; i < n; i++) {
+                parqueadero.reservar(array.get(i));
+            }
+            long finish = System.currentTimeMillis();
+            long timeElapsed = finish - start;
+            System.out.println(timeElapsed);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void probarFacturacion(int m, int espaciosSeccion){
@@ -73,14 +108,14 @@ public class Main {
             for (int i = 0; i < m; i++) {
                 array[i] = new Ingreso(new Carro(scan.next(),scan.next()),new Cliente(scan.next(),scan.next()));
             }
-            //System.out.println(array[m-1].getCliente().getNombre());
             long start = System.currentTimeMillis();
             for (int i = 0; i < m; i++) {
                 parqueadero.ingresarVehiculo(array[i]);
             }
             long finish = System.currentTimeMillis();
             long timeElapsed = finish - start;
-            //System.out.println(timeElapsed);
+            System.out.println(timeElapsed);
+            
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -121,13 +156,13 @@ public class Main {
     
     
     public void generarSolicitudesFacturas(int m, int espaciosSeccion){
-       PrintWriter write = null;
+        PrintWriter write = null;
         try {
             write = new PrintWriter(new File("src\\data\\facturar.txt"));
             int piso = 1, n=1;
             char s = 'A';
             for (int i = 0; i < m; i++) {
-                write.print(piso+","+s+","+n+",");
+                write.print(piso+","+s+","+n+"\n");
                 if(n == espaciosSeccion){
                     if(s == 'D'){ piso++;s = 'A';
                     }else if(s == 'A')s = 'B';

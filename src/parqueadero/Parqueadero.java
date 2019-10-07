@@ -6,7 +6,7 @@
 package parqueadero;
 
 import DataStructures.*;
-import dLinkedList.DLinkedList;
+import dLinkedList.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Array;
@@ -36,7 +36,7 @@ public class Parqueadero {
     /**
      * Arreglo que contiene los espacios disponibles entre el principio de la lista y el final.
      */
-    private ArregloDinamico<Node<Servicio>> disponibles;
+    private ArregloDinamico<DNode<Servicio>> disponibles;
     /**
      * Facturas realizadas el dia actual.
      */
@@ -77,7 +77,7 @@ public class Parqueadero {
     public Parqueadero(int numPisos, int espaciosSeccion){
         this.calendario = Calendar.getInstance();
         this.reservados = new DLinkedList<Servicio>();
-        this.disponibles = new ArregloDinamico<Node<Servicio>>();
+        this.disponibles = new ArregloDinamico<DNode<Servicio>>();
         this.facturas = new ArregloDinamico<Factura>();
         this.servicios = new DLinkedList<Servicio>();
         this.solicitudesIngreso = new Cola<Ingreso>();
@@ -113,7 +113,7 @@ public class Parqueadero {
                 disponibles.removeLast();
             }else{
                 if(servicios.isEmpty() && reservados.isEmpty()){servicios.pushBack(this.siguienteEspacio(null));}
-                if(servicios.isEmpty()){servicios.pushBack(this.siguienteEspacio(reservados.topBack()));}
+                else if(servicios.isEmpty()){servicios.pushBack(this.siguienteEspacio(reservados.topBack()));}
                 else servicios.pushBack(this.siguienteEspacio(servicios.topBack()));
                 servicios.topBack().setCliente(ingreso.getCliente());
                 servicios.topBack().setVehiculo(ingreso.getVehiculo());
@@ -144,7 +144,8 @@ public class Parqueadero {
      * Metodo que genera la factura del servicio con el costo.
      */
     public Factura facturar(int piso, char seccion ,int numero){
-        Node<Servicio> nodo = (Node<Servicio>)secciones[piso-1][sections.get(seccion)];
+        DNode<Servicio> nodo = (DNode<Servicio>)secciones[piso-1][sections.get(seccion)];
+        //System.out.println(nodo.getData());
         while(nodo.getData().getNumero() != numero) nodo = nodo.next();
         disponibles.add(nodo);
         return new Factura(nodo.getData(), (Calendar)calendario.clone(), this.tarifa);
@@ -155,7 +156,7 @@ public class Parqueadero {
     public void avanzar(){
         calendario.add(Calendar.SECOND, salto);
         while(reservados.topFront().getHoraIngreso().after(calendario)){
-            disponibles.add(new Node<Servicio>(reservados.topBack()));
+            disponibles.add(new DNode<Servicio>(reservados.topBack()));
             reservados.popBack();
         }
     }
@@ -167,7 +168,7 @@ public class Parqueadero {
         try{
             Scanner scan = new Scanner(new File("src\\data\\reservas.txt"));
             Pila<Reserva> pila = new Pila<Reserva>();
-            scan.useDelimiter(",|\\n");
+            scan.useDelimiter(",|\\n");     
             while(scan.hasNext()){
                 Calendar aux = Calendar.getInstance();
                 aux.set(Calendar.HOUR, scan.nextInt());
@@ -175,9 +176,11 @@ public class Parqueadero {
                 pila.push(new Reserva(new Carro(scan.next(), scan.next())
                         , new Cliente(scan.next(), scan.next()), aux));
             }
+            
             while(!pila.isEmpty()){
                 Reserva r = pila.pop();
-                reservados.pushBack(siguienteEspacio(reservados.topBack()));
+                if(reservados.isEmpty())reservados.pushBack(siguienteEspacio(null));
+                else reservados.pushBack(siguienteEspacio(reservados.topBack()));
                 reservados.topBack().setReservado(true);
                 reservados.topBack().setHoraIngreso(r.getFecha());
                 reservados.topBack().setCliente(r.getCliente());
@@ -187,6 +190,7 @@ public class Parqueadero {
                             [this.sections.get(reservados.topBack().getSeccion())] = reservados.getTail();
                 }
             }
+            
         }catch(FileNotFoundException e){
             System.out.println("No se puedieron cargar las reservas gg :'(");
         }
@@ -234,10 +238,82 @@ public class Parqueadero {
                 && aux.getPiso() == this.numPisos
                 && aux.getSeccion() == 'D';
     }
-            
+    
+    public void imprimirReferencias(){
+        for (int i = 0; i < numPisos; i++) {
+            for (int j = 0; j < 4; j++) {
+                System.out.println(((DNode<Servicio>)secciones[i][j]).getData().getCliente());
+            }
+        }
+    }
+
+    public ArregloDinamico<DNode<Servicio>> getDisponibles() {
+        return disponibles;
+    }
+
+    public void setDisponibles(ArregloDinamico<DNode<Servicio>> disponibles) {
+        this.disponibles = disponibles;
+    }
+
+    public ArregloDinamico<Factura> getFacturas() {
+        return facturas;
+    }
+    
+    public static void main(String[] args) {
+        Parqueadero parqueadero = new Parqueadero(2,10);
+        Ingreso ingreso1 = new Ingreso(new Carro("ASD-123","Chevrolet"), new Cliente("Daniela Yepes","1293874"));
+        Ingreso ingreso2 = new Ingreso(new Carro("ASD-124","Honda"), new Cliente("Sebastian Rojas","1293874"));
+        parqueadero.ingresarVehiculo(ingreso1);
+        parqueadero.ingresarVehiculo(ingreso2);
+        parqueadero.servicios.printList();
+    }
+    public void setFacturas(ArregloDinamico<Factura> facturas) {
+        this.facturas = facturas;
+    }
+
+    public ArregloDinamico<Reserva> getSolicitudesReservas() {
+        return solicitudesReservas;
+    }
+
+    public void setSolicitudesReservas(ArregloDinamico<Reserva> solicitudesReservas) {
+        this.solicitudesReservas = solicitudesReservas;
+    }
+
+    public Cola<Ingreso> getSolicitudesIngreso() {
+        return solicitudesIngreso;
+    }
+
+    public void setSolicitudesIngreso(Cola<Ingreso> solicitudesIngreso) {
+        this.solicitudesIngreso = solicitudesIngreso;
+    }
+
+    public DLinkedList<Servicio> getReservados() {
+        return reservados;
+    }
+
+    public void setReservados(DLinkedList<Servicio> reservados) {
+        this.reservados = reservados;
+    }
+
+    public DLinkedList<Servicio> getServicios() {
+        return servicios;
+    }
+
+    public void setServicios(DLinkedList<Servicio> servicios) {
+        this.servicios = servicios;
+    }
+
+    public Object[][] getSecciones() {
+        return secciones;
+    }
+
+    public void setSecciones(Object[][] secciones) {
+        this.secciones = secciones;
+    }
     /**
      * Metodo para guardar las reservas hechas en el dia 
      */
+    
     
     
 }

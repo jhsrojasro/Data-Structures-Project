@@ -94,7 +94,7 @@ public class Servicio {
 
     @Override
     public String toString() {
-        return "Servicio{" + "piso=" + piso + ", seccion=" + seccion + ", numero=" + numero + ", horaIngreso=" + horaIngreso + ", reservado=" + reservado + ", vehiculo=" + vehiculo + ", cliente=" + cliente + '}';
+        return "Servicio{" + "piso=" + piso + ", seccion=" + seccion + ", numero=" + numero + ", horaIngreso=" + horaIngreso.get(Calendar.HOUR_OF_DAY)+":"+horaIngreso.get(Calendar.MINUTE)+", reservado=" + reservado + ", vehiculo=" + vehiculo + ", cliente=" + cliente + '}';
     }
     
     
