@@ -11,7 +11,7 @@ import java.util.Calendar;
  *
  * @author Sebastian Rojas
  */
-public class Servicio {
+public class Servicio{
     private int piso;
     private char seccion;
     private int numero;
@@ -95,6 +95,10 @@ public class Servicio {
     @Override
     public String toString() {
         return "Servicio{" + "piso=" + piso + ", seccion=" + seccion + ", numero=" + numero + ", horaIngreso=" + horaIngreso.get(Calendar.HOUR_OF_DAY)+":"+horaIngreso.get(Calendar.MINUTE)+", reservado=" + reservado + ", vehiculo=" + vehiculo + ", cliente=" + cliente + '}';
+    }
+
+    public int compareTo(Servicio servicio) {
+        return this.vehiculo.getPlaca().compareTo(servicio.vehiculo.getPlaca());
     }
     
     

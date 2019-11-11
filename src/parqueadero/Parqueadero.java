@@ -71,6 +71,16 @@ public class Parqueadero {
     private final double tarifa = 50.0;
     
     /**
+     *Arbol de referencias a los servicios. 
+     */
+    private AVLTree arbol;
+    
+    /**
+     * Pila que almacena las ultimas facturas realizadas para hacer rollback.
+     */
+    private Pila<Servicio> rollBack;
+    
+    /**
      * Constructor por defecto del parqueadero, carga las reservaciones hechas el dia anterior y reserva los espacios de dichas
      * reservaciones, crea la clase calendar desde las 0 horas.
      */
@@ -90,6 +100,8 @@ public class Parqueadero {
         this.sections.put('C', 2);
         this.sections.put('D', 3);
         this.secciones = new Object[numPisos][4];
+        this.arbol = new AVLTree();
+        this.rollBack = new Pila<Servicio>();
         //cargarReservaciones();
         //ingresarVehiculo(new Ingreso(new Carro("ZXY-987","Renault"),new Cliente("Daniela Yepes Dimate","12387341")));
         //ingresarVehiculoReserva(new Ingreso(new Carro("ABC-123","Chevrolet"),new Cliente("Jose Miguel Aguilar","1015466300")));
@@ -110,6 +122,7 @@ public class Parqueadero {
                 disponibles.getLast().getData().setHoraIngreso((Calendar)calendario.clone());
                 disponibles.getLast().getData().setCliente(ingreso.getCliente());
                 disponibles.getLast().getData().setVehiculo(ingreso.getVehiculo());
+                arbol.insertar(disponibles.getLast().getData());
                 disponibles.removeLast();
             }else{
                 if(servicios.isEmpty() && reservados.isEmpty()){servicios.pushBack(this.siguienteEspacio(null));}
@@ -118,6 +131,7 @@ public class Parqueadero {
                 servicios.topBack().setCliente(ingreso.getCliente());
                 servicios.topBack().setVehiculo(ingreso.getVehiculo());
                 servicios.topBack().setHoraIngreso((Calendar)calendario.clone());
+                arbol.insertar(servicios.topBack());
                 if(servicios.topBack().getNumero() == 1){
                     secciones[servicios.topBack().getPiso() - 1]
                             [this.sections.get(servicios.topBack().getSeccion())] = servicios.getTail();
@@ -137,6 +151,7 @@ public class Parqueadero {
             ((Servicio)reservados.getTail().getData()).setVehiculo(ingreso.getVehiculo());
             ((Servicio)reservados.getTail().getData()).setHoraIngreso((Calendar)calendario.clone());
             servicios.setHead(reservados.getTail());
+            arbol.insertar(reservados.topBack());
             reservados.popBack();
         }
     }
@@ -148,8 +163,18 @@ public class Parqueadero {
         //System.out.println(nodo.getData());
         while(nodo.getData().getNumero() != numero) nodo = nodo.next();
         disponibles.add(nodo);
+        arbol.borrar(nodo.getData());
+        rollBack.push(nodo.getData());
         return new Factura(nodo.getData(), (Calendar)calendario.clone(), this.tarifa);
     }
+    
+    public void rollBackServicio(){
+        Servicio aux = rollBack.pop();
+        disponibles.removeLast();
+        arbol.insertar(aux);
+        facturas.removeLast();
+    }
+    
     /**
      * Metodo que simula el paso del tiempo del parqueadero luego de atender una solicitud.
      */
