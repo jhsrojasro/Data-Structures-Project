@@ -10,10 +10,10 @@ package DataStructures;
  * @author Sebastian Rojas
  */
 public class Pila<T>{
-    private LinkedList<T> lista;
+    private DLinkedList<T> lista;
 
     public Pila() {
-        this.lista = new LinkedList<T>();
+        this.lista = new DLinkedList<T>();
     }
     
     public void push(T value){

@@ -165,7 +165,7 @@ public class AVLTree {
     private void printPreOrder(AVLNode root){
         if(root != null){
             if(root.left != null) printPreOrder(root.left);
-            System.out.print(root.data+" ");
+            System.out.print(root.data.getVehiculo().getPlaca()+" ");
             if(root.right != null) printPreOrder(root.right);
         }
     }
@@ -205,5 +205,8 @@ public class AVLTree {
         return root;
     }
     
+    public static void main(String[] args) {
+        AVLTree arbolito = new AVLTree();
+    }
     
 }

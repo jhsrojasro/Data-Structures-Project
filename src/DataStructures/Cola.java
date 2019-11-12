@@ -10,10 +10,10 @@ package DataStructures;
  * @author Sebastian Rojas
  */
 public class Cola<T> {
-    private LinkedList<T> list;
+    private DLinkedList<T> list;
 
     public Cola() {
-        this.list = new LinkedList<T>();
+        this.list = new DLinkedList<T>();
     }
     
     public void enqueue(T value){

@@ -5,8 +5,9 @@
  */
 package parqueadero;
 
+import DataStructures.DNode;
+import DataStructures.DLinkedList;
 import DataStructures.*;
-import dLinkedList.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Array;
@@ -122,7 +123,7 @@ public class Parqueadero {
                 disponibles.getLast().getData().setHoraIngreso((Calendar)calendario.clone());
                 disponibles.getLast().getData().setCliente(ingreso.getCliente());
                 disponibles.getLast().getData().setVehiculo(ingreso.getVehiculo());
-                arbol.insertar(disponibles.getLast().getData());
+                //arbol.insertar(disponibles.getLast().getData());
                 disponibles.removeLast();
             }else{
                 if(servicios.isEmpty() && reservados.isEmpty()){servicios.pushBack(this.siguienteEspacio(null));}
@@ -131,7 +132,7 @@ public class Parqueadero {
                 servicios.topBack().setCliente(ingreso.getCliente());
                 servicios.topBack().setVehiculo(ingreso.getVehiculo());
                 servicios.topBack().setHoraIngreso((Calendar)calendario.clone());
-                arbol.insertar(servicios.topBack());
+                //arbol.insertar(servicios.topBack());
                 if(servicios.topBack().getNumero() == 1){
                     secciones[servicios.topBack().getPiso() - 1]
                             [this.sections.get(servicios.topBack().getSeccion())] = servicios.getTail();
@@ -140,6 +141,22 @@ public class Parqueadero {
         }else{
             solicitudesIngreso.enqueue(ingreso);
         }
+    }
+
+    public AVLTree getArbol() {
+        return arbol;
+    }
+
+    public void setArbol(AVLTree arbol) {
+        this.arbol = arbol;
+    }
+
+    public Pila<Servicio> getRollBack() {
+        return rollBack;
+    }
+
+    public void setRollBack(Pila<Servicio> rollBack) {
+        this.rollBack = rollBack;
     }
     
     /**
@@ -151,7 +168,7 @@ public class Parqueadero {
             ((Servicio)reservados.getTail().getData()).setVehiculo(ingreso.getVehiculo());
             ((Servicio)reservados.getTail().getData()).setHoraIngreso((Calendar)calendario.clone());
             servicios.setHead(reservados.getTail());
-            arbol.insertar(reservados.topBack());
+            //arbol.insertar(reservados.topBack());
             reservados.popBack();
         }
     }

@@ -5,9 +5,9 @@
  */
 package main;
 
+import DataStructures.DNode;
 import parqueadero.*;
 import DataStructures.*;
-import dLinkedList.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -25,20 +25,22 @@ public class Main {
     private Parqueadero parqueadero;
     private String[] nombres;
     private String[] marcas;
-    public final int prueba = 1000000;
-    public final int numEspacios = 25;
-    public final int numPisos = 1000;
+    public final int prueba = 100000;
+    public final int numEspacios = 250;
+    public final int numPisos = 100;
     
     
     public static void main(String[] args){
         Main main = new Main();
-        //main.generarSolicitudesIngreso(main.prueba);
+        //main.generarSolicitudesIngreso();
         //main.generarSolicitudesFacturas(main.prueba, main.numEspacios);
-        //main.probarIngreso(main.prueba);
+        main.probarIngreso();
         //main.parqueadero.getServicios().printList();
         //main.probarFacturacion(main.prueba, main.numEspacios);
         //main.generarReservas(100);
-        main.probarReservar();
+        //main.probarReservar();
+        main.probarArbol();
+        
         
     }
     public Main(){
@@ -76,19 +78,19 @@ public class Main {
         }
     }
     
-    public void probarFacturacion(int m, int espaciosSeccion){
+    public void probarFacturacion(int espaciosSeccion){
         try {
             Scanner scan = new Scanner(new File("src\\data\\facturar.txt"));
             scan.useDelimiter(",|\\n");
-            int[] p = new int[m] , n = new int[m];
-            char[] s = new char[m];
-            for (int i = 0; i < m; i++) {
+            int[] p = new int[this.prueba] , n = new int[this.prueba];
+            char[] s = new char[this.prueba];
+            for (int i = 0; i < this.prueba; i++) {
                 p[i] = Integer.parseInt(scan.next());
                 s[i] = scan.next().charAt(0);
                 n[i] = Integer.parseInt(scan.next());   
             }
             long start = System.currentTimeMillis();
-            for (int i = 0; i < m; i++) {
+            for (int i = 0; i < this.prueba; i++) {
                 parqueadero.facturar(p[i], s[i], n[i]);
             }
             long finish = System.currentTimeMillis();
@@ -100,25 +102,55 @@ public class Main {
 
     }
     
-    public void probarIngreso(int m){
+    public void probarIngreso(){
         try {
-            Ingreso[] array = new Ingreso[m];
+            Ingreso[] array = new Ingreso[this.prueba];
             Scanner scan = new Scanner(new File("src\\data\\solicitudesIngreso.txt"));
             scan.useDelimiter(",|\\n");
-            for (int i = 0; i < m; i++) {
+            for (int i = 0; i < this.prueba; i++) {
                 array[i] = new Ingreso(new Carro(scan.next(),scan.next()),new Cliente(scan.next(),scan.next()));
             }
             long start = System.currentTimeMillis();
-            for (int i = 0; i < m; i++) {
-                parqueadero.ingresarVehiculo(array[i]);
+            for (int i = 0; i < this.prueba; i++) {
+                parqueadero.ingresarVehiculo(array[i]);// Ingreso A la lista encadenada.
             }
             long finish = System.currentTimeMillis();
             long timeElapsed = finish - start;
-            System.out.println(timeElapsed);
+            System.out.println("ingreso: "+timeElapsed+"ms");
             
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void probarArbol(){
+        long start = System.currentTimeMillis();
+        DNode<Servicio> head = parqueadero.getServicios().getHead();
+        while(head != null){
+            parqueadero.getArbol().insertar(head.getData());
+            head = head.next();
+        }
+        long finish = System.currentTimeMillis();
+        long timeElapsed = finish - start;
+        System.out.println("Insercion en arbol: "+timeElapsed+" ms");
+        start = System.currentTimeMillis();
+        head = parqueadero.getServicios().getHead();
+        while(head != null){
+            Servicio s  = parqueadero.getArbol().find(head.getData().getVehiculo().getPlaca());
+            head = head.next();
+        }
+        finish = System.currentTimeMillis();
+        timeElapsed = finish - start;
+        System.out.println("Busqueda en arbol: "+timeElapsed+" ms");
+        start = System.currentTimeMillis();
+        head = parqueadero.getServicios().getHead();
+        while(head != null){
+            parqueadero.getArbol().borrar(head.getData());
+            head = head.next();
+        }
+        finish = System.currentTimeMillis();
+        timeElapsed = finish - start;
+        System.out.println("Eliminar en arbol: "+timeElapsed+" ms");  
     }
     
     public String randomMarca(){
@@ -153,15 +185,13 @@ public class Main {
         this.generarIngresosReservas(n,s);
     }
     
-    
-    
-    public void generarSolicitudesFacturas(int m, int espaciosSeccion){
+    public void generarSolicitudesFacturas(int espaciosSeccion){
         PrintWriter write = null;
         try {
             write = new PrintWriter(new File("src\\data\\facturar.txt"));
             int piso = 1, n=1;
             char s = 'A';
-            for (int i = 0; i < m; i++) {
+            for (int i = 0; i < this.prueba; i++) {
                 write.print(piso+","+s+","+n+"\n");
                 if(n == espaciosSeccion){
                     if(s == 'D'){ piso++;s = 'A';
@@ -194,10 +224,10 @@ public class Main {
         }
     }
     
-    public void generarSolicitudesIngreso(int m){
+    public void generarSolicitudesIngreso(){
         try {
             PrintWriter write1 = new PrintWriter(new File("src\\data\\solicitudesIngreso.txt"));
-            for (int i = 0; i < m; i++) {
+            for (int i = 0; i < this.prueba; i++) {
                 write1.println(this.generarIngreso());
             }
     

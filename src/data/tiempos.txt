@@ -17,3 +17,9 @@ Factura:
  1k --> 0.172 seg
  10k --> 0.656 seg
  100k --> 5.423 seg
+ 
+ Ingresar al Arbol:
+ 100 -->  seg
+ 1k -->  seg
+ 10k -->  seg
+ 100k -->  seg
