@@ -14,21 +14,20 @@ import java.util.Calendar;
 public class Reserva {
     private Carro carro;
     private Cliente cliente;
-    private Calendar fecha;
+    private Lugar lugar;
 
-    public Reserva(Carro carro, Cliente cliente, Calendar fecha) {
+    public Reserva(Carro carro, Cliente cliente, Lugar lugar) {
         this.carro = carro;
         this.cliente = cliente;
-        this.fecha = fecha;
-        
-    }
-    
-    public Calendar getFecha() {
-        return fecha;
+        this.lugar = lugar;
     }
 
-    public void setFecha(Calendar fecha) {
-        this.fecha = fecha;
+    public Lugar getLugar() {
+        return lugar;
+    }
+
+    public void setLugar(Lugar lugar) {
+        this.lugar = lugar;
     }
 
     public Carro getCarro() {
@@ -45,6 +44,11 @@ public class Reserva {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    @Override
+    public String toString() {
+        return lugar + "," + carro + "," + cliente;
     }
     
     

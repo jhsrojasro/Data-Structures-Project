@@ -25,6 +25,16 @@ public class Servicio{
         this.seccion = seccion;
         this.numero = numero;
         this.horaIngreso = horaIngreso;
+        this.reservado = false;
+    }
+
+    public Servicio(int piso, char seccion, int numero, Carro vehiculo, Cliente cliente) {
+        this.piso = piso;
+        this.seccion = seccion;
+        this.numero = numero;
+        this.reservado = true;
+        this.vehiculo = vehiculo;
+        this.cliente = cliente;
     }
     
     public Servicio(int piso, char seccion, int numero, Calendar horaIngreso, Carro vehiculo, Cliente cliente) {
@@ -34,6 +44,7 @@ public class Servicio{
         this.horaIngreso = horaIngreso;
         this.vehiculo = vehiculo;
         this.cliente = cliente;
+        this.reservado = false;
     }
 
     public Carro getVehiculo() {

@@ -5,7 +5,6 @@
  */
 package main;
 
-import DataStructures.DNode;
 import parqueadero.*;
 import DataStructures.*;
 import java.io.File;
@@ -33,13 +32,12 @@ public class Main {
     public static void main(String[] args){
         Main main = new Main();
         //main.generarSolicitudesIngreso();
-        //main.generarSolicitudesFacturas(main.prueba, main.numEspacios);
+        //main.generarSolicitudesFacturas();
         main.probarIngreso();
-        //main.parqueadero.getServicios().printList();
-        //main.probarFacturacion(main.prueba, main.numEspacios);
+        //main.probarFacturacion();
         //main.generarReservas(100);
         //main.probarReservar();
-        main.probarArbol();
+        //main.probarArbol();
         
         
     }
@@ -54,19 +52,16 @@ public class Main {
     public void probarReservar(){
         try {
             long start = System.currentTimeMillis();
-            Scanner scan = new Scanner(new File("src\\data\\reservas.txt"));
+            Scanner scan = new Scanner(new File("src\\data\\solicitudesReservas.txt"));
             ArregloDinamico<Reserva> array = new ArregloDinamico<Reserva>();
             scan.useDelimiter(",|\\n");
             int n=0;
             while(scan.hasNext()){
-                Calendar aux = Calendar.getInstance();
-                aux.set(Calendar.HOUR, scan.nextInt());
-                aux.set(Calendar.SECOND, scan.nextInt());
+                Lugar l = new Lugar(scan.nextInt(), scan.next().charAt(0), scan.nextInt());
                 array.add(new Reserva(new Carro(scan.next(), scan.next())
-                        , new Cliente(scan.next(), scan.next()), aux));
+                        , new Cliente(scan.next(), scan.next()), l));
                 n++;
             }
-            
             for (int i = 0; i < n; i++) {
                 parqueadero.reservar(array.get(i));
             }
@@ -78,16 +73,16 @@ public class Main {
         }
     }
     
-    public void probarFacturacion(int espaciosSeccion){
+    public void probarFacturacion(){
         try {
             Scanner scan = new Scanner(new File("src\\data\\facturar.txt"));
             scan.useDelimiter(",|\\n");
             int[] p = new int[this.prueba] , n = new int[this.prueba];
             char[] s = new char[this.prueba];
             for (int i = 0; i < this.prueba; i++) {
-                p[i] = Integer.parseInt(scan.next());
+                p[i] = scan.nextInt();
                 s[i] = scan.next().charAt(0);
-                n[i] = Integer.parseInt(scan.next());   
+                n[i] = scan.nextInt();   
             }
             long start = System.currentTimeMillis();
             for (int i = 0; i < this.prueba; i++) {
@@ -95,7 +90,7 @@ public class Main {
             }
             long finish = System.currentTimeMillis();
             long timeElapsed = finish - start;
-            System.out.println(timeElapsed);
+            System.out.println("facturacion: "+timeElapsed+"ms");
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -112,7 +107,7 @@ public class Main {
             }
             long start = System.currentTimeMillis();
             for (int i = 0; i < this.prueba; i++) {
-                parqueadero.ingresarVehiculo(array[i]);// Ingreso A la lista encadenada.
+                parqueadero.ingresarVehiculo(array[i]);// Ingreso al parqueadero
             }
             long finish = System.currentTimeMillis();
             long timeElapsed = finish - start;
@@ -123,6 +118,7 @@ public class Main {
         }
     }
     
+    /*
     public void probarArbol(){
         long start = System.currentTimeMillis();
         DNode<Servicio> head = parqueadero.getServicios().getHead();
@@ -152,6 +148,7 @@ public class Main {
         timeElapsed = finish - start;
         System.out.println("Eliminar en arbol: "+timeElapsed+" ms");  
     }
+*/
     
     public String randomMarca(){
         Random r = new Random();
@@ -165,40 +162,66 @@ public class Main {
     
     public void generarReservas(int n){
         PrintWriter write = null;
-        String[] s =  new String[n];
         try {
             write = new PrintWriter(new File("src\\data\\reservas.txt"));
-            
-            int i=0, minutos = 0, horas = 5;
-            while(i<n){
-                if(minutos == 0) horas=(horas+1)%24;
-                s[i] = this.generarIngreso();
-                write.println(horas+","+minutos+","+s[i]); 
-                minutos = (minutos +1)%60;
-                i++;
+            String aux;
+            int c = 0;
+            for(int i=0; i<numPisos && c < n; i++){
+                for(int j=0; j<4 && c < n; j++){
+                    for(int k=0; k<numEspacios && c < n; k++){
+                        aux = i+","+parqueadero.seccionChar(j)+","+k+","+generarIngreso();
+                        write.println(aux);
+                        c++;
+                    }
+                }
             }
+            
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             write.close();
         }
-        this.generarIngresosReservas(n,s);
+        
     }
     
-    public void generarSolicitudesFacturas(int espaciosSeccion){
+    public void generarSolicituresReservas(int n){
+        PrintWriter write = null;
+        try {
+            write = new PrintWriter(new File("src\\data\\solicitudesReservas.txt"));
+            String aux;
+            int c = 0;
+            for(int i=0; i<numPisos && c < n; i++){
+                for(int j=0; j<4 && c < n; j++){
+                    for(int k=0; k<numEspacios && c < n; k++){
+                        aux = i+","+parqueadero.seccionChar(j)+","+k+","+generarIngreso();
+                        write.println(aux);
+                        c++;
+                    }
+                }
+            }
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            write.close();
+        }
+        
+    }
+    
+    public void generarSolicitudesFacturas(){
         PrintWriter write = null;
         try {
             write = new PrintWriter(new File("src\\data\\facturar.txt"));
-            int piso = 1, n=1;
+            int piso = 0, n=0;
             char s = 'A';
             for (int i = 0; i < this.prueba; i++) {
                 write.print(piso+","+s+","+n+"\n");
-                if(n == espaciosSeccion){
+                if(n == this.numEspacios - 1){
                     if(s == 'D'){ piso++;s = 'A';
                     }else if(s == 'A')s = 'B';
                     else if(s == 'B') s = 'C';
                     else s = 'D';
-                    n = 1;   
+                    n = 0;   
                 }else{
                     n++;
                 }
@@ -289,5 +312,7 @@ public class Main {
         s += (char)(r.nextInt(10) + '0');
         return s;
     }
-            
+    
+    
+    
 }

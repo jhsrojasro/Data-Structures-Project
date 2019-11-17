@@ -37,7 +37,7 @@ public class Carro {
 
     @Override
     public String toString() {
-        return "Carro{" + "placa=" + placa + ", marca=" + marca + '}';
+        return placa + "," + marca;
     }
 
     public boolean equals(Carro carro) {
